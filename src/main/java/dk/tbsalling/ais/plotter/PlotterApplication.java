@@ -29,7 +29,7 @@ public class PlotterApplication extends SpringBootJavaFxApplication {
 	@Autowired
 	private MainLayout mainLayout;
 
-	//TODO @Autowired
+	@Autowired
 	private AISTracker tracker;
 
 	@Override
@@ -52,7 +52,6 @@ public class PlotterApplication extends SpringBootJavaFxApplication {
         InputStream is = Thread.currentThread().getContextClassLoader().getResource("demo.nmea").openStream();
         DemoNmeaReader nmeaReader = new DemoNmeaReader(is, 1, TimeUnit.SECONDS);
 
-        tracker = new AISTracker();
         tracker.registerSubscriber(this);
 
         ExecutorService trackingExecutor = Executors.newSingleThreadExecutor();
