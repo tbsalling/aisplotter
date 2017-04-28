@@ -9,20 +9,12 @@ import java.util.concurrent.TimeUnit;
 public class NmeaDemoSupplier {
 
     private final InputStream is;
-    private final int time;
-    private final TimeUnit unit;
 
-    public NmeaDemoSupplier(InputStream is, int time, TimeUnit unit) {
-        this.is = is;
-        this.time = time;
-        this.unit = unit;
-    }
-
-    public InputStream openStream() throws IOException {
-        return new InputStream() {
+    public NmeaDemoSupplier(InputStream inputStream, int time, TimeUnit unit) {
+        this.is = new InputStream() {
             private String currentLine;
             private int currentIndex;
-            private final BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            private final BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
             @Override
             public int read() throws IOException {
@@ -47,8 +39,28 @@ public class NmeaDemoSupplier {
                 }
 
             }
+
+            @Override
+            public void close() throws IOException {
+                inputStream.close();
+            }
         };
 
+    }
+
+    public String readLine() throws IOException {
+        StringBuilder sb = new StringBuilder(64);
+
+        int c;
+        while((c = is.read()) != -1) {
+            if ((char) c != '\n')
+                sb.append((char) c);
+            else
+                return sb.toString();
+        }
+
+        is.close();
+        return null;
     }
 
 }
