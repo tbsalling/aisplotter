@@ -1,50 +1,53 @@
 package dk.tbsalling.ais.plotter.io;
 
-import java.io.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ScheduledExecutorService;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by Thomas on 28-04-2017.
- */
 public class NmeaDemoSupplier {
 
-    private final ScheduledExecutorService reader = Executors.newScheduledThreadPool(1);
+    private final InputStream is;
+    private final int time;
+    private final TimeUnit unit;
 
-    private final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
-
-    public NmeaDemoSupplier() {
-        try {
-            InputStream is = Thread.currentThread().getContextClassLoader().getResource("ais-sample-1.nmea").openStream();
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-
-            reader.scheduleAtFixedRate(() -> {
-                br.readLine();
-            }, 0, 2, TimeUnit.SECONDS);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    public NmeaDemoSupplier(InputStream is, int time, TimeUnit unit) {
+        this.is = is;
+        this.time = time;
+        this.unit = unit;
     }
 
-    public InputStream openStream() {
+    public InputStream openStream() throws IOException {
         return new InputStream() {
-            private String currentBuffer;
+            private String currentLine;
+            private int currentIndex;
+            private final BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             @Override
             public int read() throws IOException {
-                if (currentBuffer == null)
-                    currentBuffer = queue.take();
+                if (currentLine == null || currentIndex >= currentLine.length()) {
+                    currentLine = br.readLine();
+                    if (currentLine == null)
+                        return -1; // EOF
+                    currentLine = currentLine.concat("\n");
+                    currentIndex = 0;
+                    tryToSleep();
+                }
 
-                if (currentBuffer != null) {
-                    ByteArrayInputStream bais = new ByteArrayInputStream(currentBuffer.getBytes());
-                    while (bais.available())
+                final char c = currentLine.charAt(currentIndex++);
+                return c;
+            }
+
+            private void tryToSleep() {
+                try {
+                    unit.sleep(time);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
             }
-        }
+        };
 
     }
 
