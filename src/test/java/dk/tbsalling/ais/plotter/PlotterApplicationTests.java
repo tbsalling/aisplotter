@@ -1,4 +1,4 @@
-package dk.tbsalling.ais;
+package dk.tbsalling.ais.plotter;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
