@@ -22,13 +22,10 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.layout.HBox;
 import org.springframework.stereotype.Component;
 
-/**
- * @author Thomas Darimont
- */
 @Component
-public class SinChartComponent extends HBox {
+public class ChartComponent extends HBox {
 
-    public SinChartComponent() {
+    public ChartComponent() {
 
         NumberAxis xAxis = new NumberAxis();
         xAxis.setLabel("x");
