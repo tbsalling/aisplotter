@@ -10,13 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class MainLayout extends GridPane {
 
-    private final HelloWorldComponent helloWorldComponent;
     private final SinChartComponent sinChartComponent;
     private final StatusBarComponent statusBarComponent;
 
     @Autowired
-    public MainLayout(HelloWorldComponent helloWorldComponent, SinChartComponent sinChartComponent, StatusBarComponent statusBarComponent) {
-        this.helloWorldComponent = helloWorldComponent;
+    public MainLayout(SinChartComponent sinChartComponent, StatusBarComponent statusBarComponent) {
         this.sinChartComponent = sinChartComponent;
         this.statusBarComponent = statusBarComponent;
 
@@ -24,8 +22,7 @@ public class MainLayout extends GridPane {
     }
 
     private void initComponent() {
-        add(this.helloWorldComponent, 0, 0);
-        add(this.sinChartComponent, 0, 1);
-        add(this.statusBarComponent, 0, 2);
+        add(this.sinChartComponent, 0, 0);
+        add(this.statusBarComponent, 0, 1);
     }
 }
