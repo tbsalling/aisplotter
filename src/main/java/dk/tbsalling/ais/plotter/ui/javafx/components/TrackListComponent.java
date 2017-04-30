@@ -42,17 +42,29 @@ public class TrackListComponent extends HBox {
     private void init() {
         TableView table = new TableView();
         table.setEditable(false);
-        table.setPrefWidth(400);
+        table.prefWidthProperty().bind(this.widthProperty());
         table.setItems(trackList.getTracks());
 
         TableColumn mmsi = new TableColumn("MMSI");
+        mmsi.setPrefWidth(90);
+        mmsi.setMinWidth(90);
+        mmsi.setMaxWidth(100);
         mmsi.setCellValueFactory(new PropertyValueFactory<Track, String>("mmsi"));
 
         TableColumn<Track, String> lastUpdate = new TableColumn<>("Update");
+        lastUpdate.setPrefWidth(90);
+        lastUpdate.setMinWidth(90);
+        lastUpdate.setMaxWidth(100);
         lastUpdate.setCellValueFactory(t -> new SimpleStringProperty(t.getValue().getLastUpdate().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM))));
 
         TableColumn shipname = new TableColumn("Ship name");
         shipname.setCellValueFactory(new PropertyValueFactory<Track, String>("shipname"));
+        shipname.prefWidthProperty().bind(
+            table.widthProperty()
+            .subtract(mmsi.widthProperty())
+            .subtract(lastUpdate.widthProperty())
+            .subtract(2)
+        );
 
         table.getColumns().addAll(mmsi, lastUpdate, shipname);
 

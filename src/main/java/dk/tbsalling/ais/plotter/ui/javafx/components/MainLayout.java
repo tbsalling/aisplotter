@@ -29,11 +29,17 @@ public class MainLayout extends GridPane {
         add(this.statusBarComponent, 0, 1, 2, 1);
 
         ColumnConstraints cc = new ColumnConstraints();
+        cc.setFillWidth(true);
         cc.setHgrow(Priority.ALWAYS);
         this.getColumnConstraints().add(cc);
 
         RowConstraints rc = new RowConstraints();
+        rc.setFillHeight(true);
         rc.setVgrow(Priority.ALWAYS);
         this.getRowConstraints().add(rc);
+
+        this.trackListComponent.setPrefWidth(400);
+        this.trackListComponent.setMaxWidth(512);
+        this.chartComponent.prefWidthProperty().bind(this.prefWidthProperty());
     }
 }
