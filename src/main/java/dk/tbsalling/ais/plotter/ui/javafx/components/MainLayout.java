@@ -1,4 +1,4 @@
-package dk.tbsalling.ais.plotter.javafx.components;
+package dk.tbsalling.ais.plotter.ui.javafx.components;
 
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;

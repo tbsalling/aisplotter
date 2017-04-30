@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dk.tbsalling.ais.plotter.javafx.components;
+package dk.tbsalling.ais.plotter.ui.javafx.components;
 
 import com.google.common.eventbus.Subscribe;
 import dk.tbsalling.ais.tracker.AISTracker;

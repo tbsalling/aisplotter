@@ -13,16 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dk.tbsalling.ais.plotter.javafx.components;
+package dk.tbsalling.ais.plotter.ui.javafx.components;
 
-import com.google.common.eventbus.Subscribe;
+import dk.tbsalling.ais.plotter.ui.javafx.model.TrackList;
 import dk.tbsalling.ais.tracker.AISTrack;
-import dk.tbsalling.ais.tracker.AISTracker;
-import dk.tbsalling.ais.tracker.events.AisTrackCreatedEvent;
-import dk.tbsalling.ais.tracker.events.AisTrackDeletedEvent;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -35,15 +29,17 @@ import javax.annotation.PostConstruct;
 @Component
 public class TrackListComponent extends HBox {
 
-    private ObservableList<AISTrack> tracks = FXCollections.observableArrayList();
-
     @Autowired
-    private AISTracker tracker;
+    private TrackList trackList;
 
     public TrackListComponent() {
+    }
+
+    @PostConstruct
+    private void init() {
         TableView table = new TableView();
         table.setEditable(false);
-        table.setItems(tracks);
+        table.setItems(trackList.getTracks());
 
         TableColumn mmsi = new TableColumn("MMSI");
         mmsi.setCellValueFactory(new PropertyValueFactory<AISTrack, String>("mmsi"));
@@ -52,30 +48,11 @@ public class TrackListComponent extends HBox {
         callsign.setCellValueFactory(new PropertyValueFactory<AISTrack, String>("callsign"));
 
         TableColumn shipname = new TableColumn("Ship name");
-        shipname.setCellValueFactory(new PropertyValueFactory<AISTrack, String>("shipName"));
+        shipname.setCellValueFactory(new PropertyValueFactory<AISTrack, String>("shipname"));
 
         table.getColumns().addAll(mmsi, callsign, shipname);
 
         getChildren().add(table);
-    }
-
-    @PostConstruct
-    private void postConstruct() {
-        tracker.registerSubscriber(this);
-    }
-
-    @Subscribe
-    public void handleEvent(AisTrackCreatedEvent event) {
-        Platform.runLater(() -> {
-            tracks.add(event.getAisTrack());
-        });
-    }
-
-    @Subscribe
-    public void handleEvent(AisTrackDeletedEvent event) {
-        Platform.runLater(() -> {
-            tracks.remove(event.getAisTrack());
-        });
     }
 
 }

@@ -2,8 +2,8 @@ package dk.tbsalling.ais.plotter;
 
 import com.google.common.eventbus.Subscribe;
 import dk.tbsalling.ais.plotter.io.DemoNmeaReader;
-import dk.tbsalling.ais.plotter.javafx.SpringBootJavaFxApplication;
-import dk.tbsalling.ais.plotter.javafx.components.MainLayout;
+import dk.tbsalling.ais.plotter.ui.javafx.SpringBootJavaFxApplication;
+import dk.tbsalling.ais.plotter.ui.javafx.components.MainLayout;
 import dk.tbsalling.ais.tracker.AISTracker;
 import dk.tbsalling.ais.tracker.events.AisTrackCreatedEvent;
 import javafx.application.Preloader;
@@ -50,7 +50,7 @@ public class PlotterApplication extends SpringBootJavaFxApplication {
 
     private void initTracker() throws IOException {
         InputStream is = Thread.currentThread().getContextClassLoader().getResource("demo.nmea").openStream();
-        DemoNmeaReader nmeaReader = new DemoNmeaReader(is, 1, TimeUnit.SECONDS);
+        DemoNmeaReader nmeaReader = new DemoNmeaReader(is, 100, TimeUnit.MILLISECONDS);
 
         tracker.registerSubscriber(this);
 

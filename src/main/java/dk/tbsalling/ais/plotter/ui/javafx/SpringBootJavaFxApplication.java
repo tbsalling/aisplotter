@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dk.tbsalling.ais.plotter.javafx;
+package dk.tbsalling.ais.plotter.ui.javafx;
 
 import javafx.application.Application;
 import org.springframework.boot.SpringApplication;
