@@ -15,8 +15,8 @@
  */
 package dk.tbsalling.ais.plotter.ui.javafx.components;
 
+import dk.tbsalling.ais.plotter.ui.javafx.model.Track;
 import dk.tbsalling.ais.plotter.ui.javafx.model.TrackList;
-import dk.tbsalling.ais.tracker.AISTrack;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -39,18 +39,19 @@ public class TrackListComponent extends HBox {
     private void init() {
         TableView table = new TableView();
         table.setEditable(false);
+        table.setPrefWidth(400);
         table.setItems(trackList.getTracks());
 
         TableColumn mmsi = new TableColumn("MMSI");
-        mmsi.setCellValueFactory(new PropertyValueFactory<AISTrack, String>("mmsi"));
+        mmsi.setCellValueFactory(new PropertyValueFactory<Track, String>("mmsi"));
 
-        TableColumn callsign = new TableColumn("C/S");
-        callsign.setCellValueFactory(new PropertyValueFactory<AISTrack, String>("callsign"));
+        TableColumn lastUpdate = new TableColumn("Update");
+        lastUpdate.setCellValueFactory(new PropertyValueFactory<Track, String>("lastUpdate"));
 
         TableColumn shipname = new TableColumn("Ship name");
-        shipname.setCellValueFactory(new PropertyValueFactory<AISTrack, String>("shipname"));
+        shipname.setCellValueFactory(new PropertyValueFactory<Track, String>("shipname"));
 
-        table.getColumns().addAll(mmsi, callsign, shipname);
+        table.getColumns().addAll(mmsi, lastUpdate, shipname);
 
         getChildren().add(table);
     }
