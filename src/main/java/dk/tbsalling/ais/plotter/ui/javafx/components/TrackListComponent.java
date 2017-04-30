@@ -17,6 +17,7 @@ package dk.tbsalling.ais.plotter.ui.javafx.components;
 
 import dk.tbsalling.ais.plotter.ui.javafx.model.Track;
 import dk.tbsalling.ais.plotter.ui.javafx.model.TrackList;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -25,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 @Component
 public class TrackListComponent extends HBox {
@@ -45,8 +48,8 @@ public class TrackListComponent extends HBox {
         TableColumn mmsi = new TableColumn("MMSI");
         mmsi.setCellValueFactory(new PropertyValueFactory<Track, String>("mmsi"));
 
-        TableColumn lastUpdate = new TableColumn("Update");
-        lastUpdate.setCellValueFactory(new PropertyValueFactory<Track, String>("lastUpdate"));
+        TableColumn<Track, String> lastUpdate = new TableColumn<>("Update");
+        lastUpdate.setCellValueFactory(t -> new SimpleStringProperty(t.getValue().getLastUpdate().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM))));
 
         TableColumn shipname = new TableColumn("Ship name");
         shipname.setCellValueFactory(new PropertyValueFactory<Track, String>("shipname"));
