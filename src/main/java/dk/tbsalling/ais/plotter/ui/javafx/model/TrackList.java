@@ -55,10 +55,16 @@ public class TrackList {
 
     private static void fillTrack(AISTrack source, Track dest) {
         dest.setMmsi(source.getMmsi());
-        dest.setShipname(source.getShipName());
-        dest.setLatitude(source.getLatitude());
-        dest.setLongitude(source.getLongitude());
         dest.setLastUpdate(LocalDateTime.ofInstant(source.getTimeOfLastUpdate(), ZoneId.systemDefault()));
+
+        if (source.getShipName() != null)
+            dest.setShipname(source.getShipName());
+
+        if (source.getLatitude() != null)
+            dest.setLatitude(source.getLatitude());
+
+        if (source.getLongitude() != null   )
+            dest.setLongitude(source.getLongitude());
     }
 
 }
