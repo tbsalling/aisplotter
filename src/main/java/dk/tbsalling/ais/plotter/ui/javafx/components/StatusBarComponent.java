@@ -36,6 +36,9 @@ public class StatusBarComponent extends HBox {
     private AISTracker tracker;
 
     public StatusBarComponent() {
+    }
+
+    public void initialize() {
         statusText = new Label("StatusBar");
         getChildren().add(statusText);
     }

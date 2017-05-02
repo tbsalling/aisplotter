@@ -19,11 +19,13 @@ public class MainLayout extends GridPane {
         this.chartComponent = chartComponent;
         this.statusBarComponent = statusBarComponent;
         this.trackListComponent = trackListComponent;
-
-        initComponent();
     }
 
-    private void initComponent() {
+    public void initialize() {
+        this.chartComponent.initialize();
+        this.trackListComponent.initialize();
+        this.statusBarComponent.initialize();
+
         add(this.chartComponent, 0, 0);
         add(this.trackListComponent, 1, 0);
         add(this.statusBarComponent, 0, 1, 2, 1);
@@ -37,9 +39,5 @@ public class MainLayout extends GridPane {
         rc.setFillHeight(true);
         rc.setVgrow(Priority.ALWAYS);
         this.getRowConstraints().add(rc);
-
-        this.trackListComponent.setPrefWidth(400);
-        this.trackListComponent.setMaxWidth(512);
-        this.chartComponent.prefWidthProperty().bind(this.prefWidthProperty());
     }
 }

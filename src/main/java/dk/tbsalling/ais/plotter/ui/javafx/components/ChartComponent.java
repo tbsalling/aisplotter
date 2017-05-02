@@ -15,37 +15,51 @@
  */
 package dk.tbsalling.ais.plotter.ui.javafx.components;
 
-import javafx.collections.ObservableList;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
+import com.sothawo.mapjfx.Coordinate;
+import com.sothawo.mapjfx.MapView;
+import dk.tbsalling.ais.plotter.ui.javafx.model.TrackList;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ChartComponent extends HBox {
 
+    @Autowired
+    private TrackList trackList;
+
+    private MapView mapView;
+
     public ChartComponent() {
-
-        NumberAxis xAxis = new NumberAxis();
-        xAxis.setLabel("x");
-
-        NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel("y");
-
-        XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        series.setName("Sine");
-
-        ObservableList<XYChart.Data<Number, Number>> data = series.getData();
-
-        for (double x = -Math.PI; x < Math.PI; x += 0.5) {
-            data.add(new XYChart.Data<Number, Number>(x, 10 * Math.sin(x)));
-        }
-
-        LineChart<Number, Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
-        lineChart.setTitle("Sine function");
-        lineChart.getData().add(series);
-
-        getChildren().add(lineChart);
     }
+
+    public void initialize() {
+        setPrefWidth(800);
+        setPrefHeight(600);
+        setHgrow(this, Priority.ALWAYS);
+
+        mapView = new MapView();
+        setHgrow(mapView, Priority.ALWAYS);
+
+        mapView.setCenter(new Coordinate(55.0, 11.0));
+        mapView.setZoom(8);
+        getChildren().add(mapView);
+
+        /*
+        trackList.getTracks().addListener(new ListChangeListener<Track>() {
+            @Override
+            public void onChanged(Change<? extends Track> c) {
+                if (c.wasAdded()) {
+                    List<? extends Track> added = c.getAddedSubList();
+                    added.forEach(t -> {
+                        mapView.addMarker(Marker.Provided.RED);
+                    };
+                }
+            }
+        });   */
+
+        mapView.initialize();
+    }
+
 }

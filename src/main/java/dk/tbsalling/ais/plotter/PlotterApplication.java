@@ -41,6 +41,8 @@ public class PlotterApplication extends SpringBootJavaFxApplication {
 	}
 
     private void initUi(Stage primaryStage) {
+	    mainLayout.initialize();
+
         primaryStage.setTitle(windowTitle);
         primaryStage.setScene(new Scene(mainLayout));
         primaryStage.setResizable(true);

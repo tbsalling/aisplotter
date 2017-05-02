@@ -25,7 +25,6 @@ import javafx.scene.layout.HBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
@@ -38,8 +37,10 @@ public class TrackListComponent extends HBox {
     public TrackListComponent() {
     }
 
-    @PostConstruct
-    private void init() {
+    public void initialize() {
+        setPrefWidth(800);
+        setMaxWidth(600);
+
         TableView table = new TableView();
         table.setEditable(false);
         table.prefWidthProperty().bind(this.widthProperty());
