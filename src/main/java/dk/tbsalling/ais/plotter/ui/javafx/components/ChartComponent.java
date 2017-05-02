@@ -15,8 +15,7 @@
  */
 package dk.tbsalling.ais.plotter.ui.javafx.components;
 
-import com.sothawo.mapjfx.Coordinate;
-import com.sothawo.mapjfx.MapView;
+import com.gluonhq.maps.MapView;
 import dk.tbsalling.ais.plotter.ui.javafx.model.TrackList;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -42,8 +41,8 @@ public class ChartComponent extends HBox {
         mapView = new MapView();
         setHgrow(mapView, Priority.ALWAYS);
 
-        mapView.setCenter(new Coordinate(55.0, 11.0));
-        mapView.setZoom(8);
+        mapView.setCenter(56.0, 11.0);
+        mapView.setZoom(7);
         getChildren().add(mapView);
 
         /*
@@ -59,7 +58,7 @@ public class ChartComponent extends HBox {
             }
         });   */
 
-        mapView.initialize();
+        //mapView.initialize();
     }
 
 }

@@ -42,9 +42,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.sothawo</groupId>
-			<artifactId>mapjfx</artifactId>
-			<version>1.12.2</version>
+			<groupId>com.gluonhq</groupId>
+			<artifactId>maps</artifactId>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>dk.tbsalling</groupId>
