@@ -40,14 +40,29 @@ import java.util.List;
 @Component
 public class ChartComponent extends VBox {
 
+    public class TrackSymbol extends Circle {
+        private long mmsi;
+        public TrackSymbol(long mmsi) {
+            super(5, Color.RED);
+            this.mmsi = mmsi;
+        }
+        public long getMmsi() {
+            return mmsi;
+        }
+    }
+
     private class TrackLayer extends MapLayer {
         public void addMarker(long mmsi, String shipname, double lat, double lon) {
             MapPoint point = new MapPoint(lat,lon);
-            Node icon = new Circle(5, Color.RED);
+            Node icon = new TrackSymbol(mmsi);
             addPoint(point, icon);
         }
 
-        private final ObservableList<Pair<MapPoint, Node>> points = FXCollections.observableArrayList();
+        public void removeMarker(long mmsi) {
+            points.removeIf(pair -> pair.getValue().getMmsi() == mmsi);
+        }
+
+        private final ObservableList<Pair<MapPoint, TrackSymbol>> points = FXCollections.observableArrayList();
 
         public void addPoint(MapPoint p, Node icon) {
             points.add(new Pair(p, icon));
@@ -57,7 +72,7 @@ public class ChartComponent extends VBox {
 
         @Override
         protected void layoutLayer() {
-            for (Pair<MapPoint, Node> candidate : points) {
+            for (Pair<MapPoint, TrackSymbol> candidate : points) {
                 MapPoint point = candidate.getKey();
                 Node icon = candidate.getValue();
                 Point2D mapPoint = baseMap.getMapPoint(point.getLatitude(), point.getLongitude());
@@ -110,6 +125,11 @@ public class ChartComponent extends VBox {
                     List<? extends Track> added = c.getAddedSubList();
                     added.forEach(t -> {
                         Platform.runLater(() -> layer.addMarker(t.getMmsi(), t.getShipname(), t.getLatitude(), t.getLongitude()));
+                    });
+
+                    List<? extends Track> removed = c.getRemoved();
+                    removed.forEach(t -> {
+                        Platform.runLater(() -> layer.removeMarker(t.getMmsi()));
                     });
                 }
             }
