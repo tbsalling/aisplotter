@@ -1,9 +1,11 @@
 package dk.tbsalling.ais.plotter.ui.javafx.model;
 
 import javafx.beans.property.FloatProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,6 +22,7 @@ public class Track {
     private FloatProperty latitudeProperty = new SimpleFloatProperty(this, "latitude");
     private FloatProperty longitudeProperty = new SimpleFloatProperty(this, "longitude");
     private FloatProperty cogProperty = new SimpleFloatProperty(this, "cog");
+    private IntegerProperty hdgProperty = new SimpleIntegerProperty(this, "hdg");
 
     public final String getSource() { return sourceProperty.get(); }
     public final void setSource(String source) { sourceProperty.set(source); }
@@ -48,4 +51,8 @@ public class Track {
     public final Float getCog() { return cogProperty.get(); }
     public final void setCog(Float source) { cogProperty.set(source); }
     public FloatProperty cogProperty() { return cogProperty ;}
+
+    public final Integer getHdg() { return hdgProperty.get(); }
+    public final void setHdg(Integer source) { hdgProperty.set(source); }
+    public IntegerProperty hdgProperty() { return hdgProperty ;}
 }

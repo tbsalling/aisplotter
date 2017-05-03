@@ -110,8 +110,8 @@ public class ChartComponent extends VBox {
                     0.0, 20.0);
             this.track = track;
             this.setFill(Color.RED);
-            if (track.getCog() != null)
-                getTransforms().add(new Rotate(track.getCog(), 0, 0));
+            if (track.getHdg() != null)
+                getTransforms().add(new Rotate(track.getHdg(), 0, 0));
         }
 
         public Track getTrack() {

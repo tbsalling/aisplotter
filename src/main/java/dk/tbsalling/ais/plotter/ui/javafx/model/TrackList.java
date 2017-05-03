@@ -68,6 +68,9 @@ public class TrackList {
 
         if (source.getCourseOverGround() != null   )
             dest.setCog(source.getCourseOverGround());
+
+        if (source.getTrueHeading() != null   )
+            dest.setHdg(source.getTrueHeading());
     }
 
 }
