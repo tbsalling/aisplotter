@@ -105,13 +105,13 @@ public class ChartComponent extends VBox {
         private Track track;
 
         public TrackSymbol(Track track) {
-            super(0.0, 0.0,
-                    20.0, 10.0,
-                    10.0, 20.0);
+            super(6.0, 0.0,
+                    12.0, 20.0,
+                    0.0, 20.0);
             this.track = track;
             this.setFill(Color.RED);
             if (track.getCog() != null)
-                getTransforms().add(new Rotate(track.getCog() /* TODO */, 0, 0));
+                getTransforms().add(new Rotate(track.getCog(), 0, 0));
         }
 
         public Track getTrack() {
