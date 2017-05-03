@@ -40,31 +40,36 @@ import java.util.List;
 @Component
 public class ChartComponent extends VBox {
 
-    public class TrackSymbol extends Circle {
-        private long mmsi;
-        public TrackSymbol(long mmsi) {
+    private class TrackSymbol extends Circle {
+
+        private Track track;
+
+        public TrackSymbol(Track track) {
             super(5, Color.RED);
-            this.mmsi = mmsi;
+            this.track = track;
         }
-        public long getMmsi() {
-            return mmsi;
+        public Track getTrack() {
+            return track;
         }
     }
 
     private class TrackLayer extends MapLayer {
-        public void addMarker(long mmsi, String shipname, double lat, double lon) {
-            MapPoint point = new MapPoint(lat,lon);
-            Node icon = new TrackSymbol(mmsi);
-            addPoint(point, icon);
+
+        public void addTrackSymbol(Track track) {
+            if (track.getLatitude() != null && track.getLongitude() != null) {
+                MapPoint point = new MapPoint(track.getLatitude(), track.getLongitude());
+                Node icon = new TrackSymbol(track);
+                addPoint(point, icon);
+            }
         }
 
-        public void removeMarker(long mmsi) {
-            points.removeIf(pair -> pair.getValue().getMmsi() == mmsi);
+        public void removeTrackSymbol(long mmsi) {
+            points.removeIf(pair -> pair.getValue().getTrack().getMmsi() == mmsi);
         }
 
         private final ObservableList<Pair<MapPoint, TrackSymbol>> points = FXCollections.observableArrayList();
 
-        public void addPoint(MapPoint p, Node icon) {
+        private void addPoint(MapPoint p, Node icon) {
             points.add(new Pair(p, icon));
             this.getChildren().add(icon);
             this.markDirty();
@@ -81,7 +86,7 @@ public class ChartComponent extends VBox {
                 icon.setTranslateY(mapPoint.getY());
             }
         }
-    };
+    }
 
     @Autowired
     private TrackList trackList;
@@ -118,20 +123,17 @@ public class ChartComponent extends VBox {
 
         // ---
 
-        trackList.getTracks().addListener(new ListChangeListener<Track>() {
-            @Override
-            public void onChanged(Change<? extends Track> c) {
-                while(c.next()) {
-                    List<? extends Track> added = c.getAddedSubList();
-                    added.forEach(t -> {
-                        Platform.runLater(() -> layer.addMarker(t.getMmsi(), t.getShipname(), t.getLatitude(), t.getLongitude()));
-                    });
+        trackList.getTracks().addListener((ListChangeListener<Track>) c -> {
+            while(c.next()) {
+                List<? extends Track> added = c.getAddedSubList();
+                added.forEach(t -> {
+                    Platform.runLater(() -> layer.addTrackSymbol(t));
+                });
 
-                    List<? extends Track> removed = c.getRemoved();
-                    removed.forEach(t -> {
-                        Platform.runLater(() -> layer.removeMarker(t.getMmsi()));
-                    });
-                }
+                List<? extends Track> removed = c.getRemoved();
+                removed.forEach(t -> {
+                    Platform.runLater(() -> layer.removeTrackSymbol(t.getMmsi()));
+                });
             }
         });
 
