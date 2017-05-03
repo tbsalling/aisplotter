@@ -19,6 +19,7 @@ public class Track {
     private StringProperty shipnameProperty = new SimpleStringProperty(this, "shipname");
     private FloatProperty latitudeProperty = new SimpleFloatProperty(this, "latitude");
     private FloatProperty longitudeProperty = new SimpleFloatProperty(this, "longitude");
+    private FloatProperty cogProperty = new SimpleFloatProperty(this, "cog");
 
     public final String getSource() { return sourceProperty.get(); }
     public final void setSource(String source) { sourceProperty.set(source); }
@@ -44,4 +45,7 @@ public class Track {
     public final void setLongitude(Float source) { longitudeProperty.set(source); }
     public FloatProperty longitudeProperty() { return longitudeProperty ;}
 
+    public final Float getCog() { return cogProperty.get(); }
+    public final void setCog(Float source) { cogProperty.set(source); }
+    public FloatProperty cogProperty() { return cogProperty ;}
 }

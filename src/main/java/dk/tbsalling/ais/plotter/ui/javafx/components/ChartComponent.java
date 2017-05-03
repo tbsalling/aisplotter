@@ -36,8 +36,10 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 import javafx.stage.WindowEvent;
 import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,14 +100,20 @@ public class ChartComponent extends VBox {
         });
     }
 
-    private class TrackSymbol extends Circle {
+    private class TrackSymbol extends Polygon {
 
         private Track track;
 
         public TrackSymbol(Track track) {
-            super(5, Color.RED);
+            super(0.0, 0.0,
+                    20.0, 10.0,
+                    10.0, 20.0);
             this.track = track;
+            this.setFill(Color.RED);
+            if (track.getCog() != null)
+                getTransforms().add(new Rotate(track.getCog() /* TODO */, 0, 0));
         }
+
         public Track getTrack() {
             return track;
         }
@@ -156,9 +164,9 @@ public class ChartComponent extends VBox {
             MenuItem item2 = new MenuItem("Toggle color");
             item2.setOnAction(new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent e) {
-                    if (node instanceof Circle) {
-                        Paint fill = ((Circle) node).getFill();
-                        ((Circle) node).setFill(fill == Color.RED ? Color.GREEN : Color.RED);
+                    if (node instanceof Shape) {
+                        Paint fill = ((Shape) node).getFill();
+                        ((Shape) node).setFill(fill == Color.RED ? Color.GREEN : Color.RED);
                     }
                 }
             });

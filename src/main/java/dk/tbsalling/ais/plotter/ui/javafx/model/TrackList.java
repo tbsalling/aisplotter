@@ -65,6 +65,9 @@ public class TrackList {
 
         if (source.getLongitude() != null   )
             dest.setLongitude(source.getLongitude());
+
+        if (source.getCourseOverGround() != null   )
+            dest.setCog(source.getCourseOverGround());
     }
 
 }
