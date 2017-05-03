@@ -24,13 +24,21 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.geometry.Side;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.stage.WindowEvent;
 import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,54 +47,6 @@ import java.util.List;
 
 @Component
 public class ChartComponent extends VBox {
-
-    private class TrackSymbol extends Circle {
-
-        private Track track;
-
-        public TrackSymbol(Track track) {
-            super(5, Color.RED);
-            this.track = track;
-        }
-        public Track getTrack() {
-            return track;
-        }
-    }
-
-    private class TrackLayer extends MapLayer {
-
-        public void addTrackSymbol(Track track) {
-            if (track.getLatitude() != null && track.getLongitude() != null) {
-                MapPoint point = new MapPoint(track.getLatitude(), track.getLongitude());
-                Node icon = new TrackSymbol(track);
-                addPoint(point, icon);
-            }
-        }
-
-        public void removeTrackSymbol(long mmsi) {
-            points.removeIf(pair -> pair.getValue().getTrack().getMmsi() == mmsi);
-        }
-
-        private final ObservableList<Pair<MapPoint, TrackSymbol>> points = FXCollections.observableArrayList();
-
-        private void addPoint(MapPoint p, Node icon) {
-            points.add(new Pair(p, icon));
-            this.getChildren().add(icon);
-            this.markDirty();
-        }
-
-        @Override
-        protected void layoutLayer() {
-            for (Pair<MapPoint, TrackSymbol> candidate : points) {
-                MapPoint point = candidate.getKey();
-                Node icon = candidate.getValue();
-                Point2D mapPoint = baseMap.getMapPoint(point.getLatitude(), point.getLongitude());
-                icon.setVisible(true);
-                icon.setTranslateX(mapPoint.getX());
-                icon.setTranslateY(mapPoint.getY());
-            }
-        }
-    }
 
     @Autowired
     private TrackList trackList;
@@ -136,7 +96,96 @@ public class ChartComponent extends VBox {
                 });
             }
         });
+    }
 
+    private class TrackSymbol extends Circle {
+
+        private Track track;
+
+        public TrackSymbol(Track track) {
+            super(5, Color.RED);
+            this.track = track;
+        }
+        public Track getTrack() {
+            return track;
+        }
+    }
+
+    private class TrackLayer extends MapLayer {
+
+        public void addTrackSymbol(Track track) {
+            if (track.getLatitude() != null && track.getLongitude() != null) {
+                MapPoint point = new MapPoint(track.getLatitude(), track.getLongitude());
+                Node icon = new TrackSymbol(track);
+                addPoint(point, icon);
+                addContextMenu(icon);
+            }
+        }
+
+        public void removeTrackSymbol(long mmsi) {
+            points.removeIf(pair -> pair.getValue().getTrack().getMmsi() == mmsi);
+        }
+
+        private final ObservableList<Pair<MapPoint, TrackSymbol>> points = FXCollections.observableArrayList();
+
+        private void addPoint(MapPoint p, Node icon) {
+            points.add(new Pair(p, icon));
+            this.getChildren().add(icon);
+            this.markDirty();
+        }
+
+        private void addContextMenu(Node node) {
+            ContextMenu contextMenu = new ContextMenu();
+            contextMenu.setOnShowing(new EventHandler<WindowEvent>() {
+                public void handle(WindowEvent e) {
+                    System.out.println("showing");
+                }
+            });
+            contextMenu.setOnShown(new EventHandler<WindowEvent>() {
+                public void handle(WindowEvent e) {
+                    System.out.println("shown");
+                }
+            });
+
+            MenuItem item1 = new MenuItem("Mark confirmed");
+            item1.setOnAction(new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent e) {
+                    System.out.println("Confirmed");
+                }
+            });
+            MenuItem item2 = new MenuItem("Toggle color");
+            item2.setOnAction(new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent e) {
+                    if (node instanceof Circle) {
+                        Paint fill = ((Circle) node).getFill();
+                        ((Circle) node).setFill(fill == Color.RED ? Color.GREEN : Color.RED);
+                    }
+                }
+            });
+            contextMenu.getItems().addAll(item1, item2);
+
+            node.setOnMousePressed(e -> {
+                if (e.isPopupTrigger()) {
+                    contextMenu.show((Node)e.getSource(), Side.RIGHT, 5, 5);
+                    e.consume();
+                }
+            });
+            
+            final TextField textField = new TextField("Type Something");
+            textField.setContextMenu(contextMenu);
+        }
+
+        @Override
+        protected void layoutLayer() {
+            for (Pair<MapPoint, TrackSymbol> candidate : points) {
+                MapPoint point = candidate.getKey();
+                Node icon = candidate.getValue();
+                Point2D mapPoint = baseMap.getMapPoint(point.getLatitude(), point.getLongitude());
+                icon.setVisible(true);
+                icon.setTranslateX(mapPoint.getX());
+                icon.setTranslateY(mapPoint.getY());
+            }
+        }
     }
 
 }
